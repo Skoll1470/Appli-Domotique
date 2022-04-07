@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_home">
+
+    <fragment
+        android:id="@+id/nav_home"
+        android:name="com.example.domotique.ui.home.HomeFragment"
+        android:label="Connexion"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/nav_gallery"
+        android:name="com.example.domotique.ui.gallery.GalleryFragment"
+        android:label="Son"
+        tools:layout="@layout/fragment_gallery" />
+
+    <fragment
+        android:id="@+id/nav_slideshow"
+        android:name="com.example.domotique.ui.slideshow.SlideshowFragment"
+        android:label="Ampoule"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_porte"
+        android:name="com.example.domotique.ui.porte.PorteFragment"
+        android:label="Porte"
+        tools:layout="@layout/fragment_porte" />
+
+    <fragment
+        android:id="@+id/nav_volet"
+        android:name="com.example.domotique.ui.volet.VoletFragment"
+        android:label="Volet"
+        tools:layout="@layout/fragment_volet" />
+
+</navigation>
