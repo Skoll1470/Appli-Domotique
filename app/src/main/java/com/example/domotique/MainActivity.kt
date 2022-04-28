@@ -17,7 +17,11 @@ import com.example.domotique.databinding.ActivityMainBinding
 import com.github.kittinunf.fuel.Fuel
 import org.json.*
 import com.github.kittinunf.fuel.core.FuelManager
+import com.github.kittinunf.fuel.core.await
+import com.github.kittinunf.fuel.core.awaitResponse
+import com.github.kittinunf.fuel.core.awaitResponseResult
 import com.github.kittinunf.fuel.core.extensions.jsonBody
+import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.fuel.httpPost
 import com.github.kittinunf.result.Result;
 import com.google.android.material.snackbar.Snackbar
@@ -40,38 +44,59 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
-        val getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if(it.resultCode == RESULT_OK) {
-                serverIP = it.data?.getStringExtra("serverIP")
-                serverPort = it.data?.getStringExtra("serverPort")
+        val getResult =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if (it.resultCode == RESULT_OK) {
+                    serverIP = it.data?.getStringExtra("serverIP")
+                    serverPort = it.data?.getStringExtra("serverPort")
 
-                "http://$serverIP:$serverPort/api/request_infos".httpPost().response { _, response, result ->
-                    Toast.makeText(this@MainActivity, response.toString(), Toast.LENGTH_LONG).show()
-                    when (result) {
-                        is Result.Success -> {
-                            Toast.makeText(this@MainActivity, response.toString(), Toast.LENGTH_LONG).show()
+                    Fuel.get("http://$serverIP:$serverPort/api/request_infos")//.response { result -> Toast.makeText(this@MainActivity, result.toString(), Toast.LENGTH_LONG)}
+                        .response { request, response, result ->
+                            println(request)
+                            println(response)
+                            val (bytes, error) = result
+                            if (bytes != null) {
+                                println("[response bytes] ${String(bytes)}")
+                            }
                         }
-                        is Result.Failure -> {
-                            Toast.makeText(this@MainActivity, "http://$serverIP:$serverPort/api/request_infos", Toast.LENGTH_LONG).show()
-                        }
-                    }
-                }
 
-                val json = "{\"volume\":-0.4, \"id\":\"Spotify\", \"muted\":false}"
+                    val json = "{\"volume\":-0.4, \"id\":\"Spotify\", \"muted\":false}"
 
-                Fuel.post("http://$serverIP:$serverPort/api/update_volume ").jsonBody(json).response {
-                    result ->
-                    when (result) {
-                        is Result.Success -> {
-                            Toast.makeText(this@MainActivity, result.toString(), Toast.LENGTH_LONG).show()
+                    Fuel.post("http://$serverIP:$serverPort/api/update_volume")
+                        .jsonBody(json)
+                        .response { request, response, result ->
+                            println(request)
+                            println(response)
+                            val (bytes, error) = result
+                            if(bytes != null) {
+                                println("[response bytes] ${String(bytes)}")
+                            }
                         }
-                        is Result.Failure -> {
-                            Toast.makeText(this@MainActivity, "http://$serverIP:$serverPort/api/request_infos", Toast.LENGTH_LONG).show()
-                        }
-                    }
+
+
+                    /*
+                    Fuel.post("http://$serverIP:$serverPort/api/update_volume ").jsonBody(json)
+                        .response { result ->
+                            when (result) {
+                                is Result.Success -> {
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        result.toString(),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                                is Result.Failure -> {
+                                    Toast.makeText(
+                                        this@MainActivity,
+                                        "http://$serverIP:$serverPort/api/request_infos",
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                }
+                            }
+                        }*/
                 }
             }
-        }
+
         getResult.launch(intent)
 
         val drawerLayout: DrawerLayout = binding.drawerLayout
