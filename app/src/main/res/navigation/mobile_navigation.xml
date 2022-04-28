@@ -8,31 +8,18 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.domotique.ui.home.HomeFragment"
-        android:label="Connexion"
+        android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_gallery"
         android:name="com.example.domotique.ui.gallery.GalleryFragment"
-        android:label="Son"
+        android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_slideshow"
         android:name="com.example.domotique.ui.slideshow.SlideshowFragment"
-        android:label="Ampoule"
+        android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
-
-    <fragment
-        android:id="@+id/nav_porte"
-        android:name="com.example.domotique.ui.porte.PorteFragment"
-        android:label="Porte"
-        tools:layout="@layout/fragment_porte" />
-
-    <fragment
-        android:id="@+id/nav_volet"
-        android:name="com.example.domotique.ui.volet.VoletFragment"
-        android:label="Volet"
-        tools:layout="@layout/fragment_volet" />
-
 </navigation>
