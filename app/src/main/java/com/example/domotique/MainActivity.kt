@@ -1,126 +1,109 @@
 package com.example.domotique
 
-import android.content.Intent
-import android.os.Bundle
-import android.view.Menu
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import com.google.android.material.navigation.NavigationView
-import androidx.navigation.findNavController
-import androidx.navigation.ui.AppBarConfiguration
-import androidx.navigation.ui.navigateUp
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
-import com.example.domotique.databinding.ActivityMainBinding
-import com.github.kittinunf.fuel.Fuel
-import org.json.*
-import com.github.kittinunf.fuel.core.FuelManager
-import com.github.kittinunf.fuel.core.await
-import com.github.kittinunf.fuel.core.awaitResponse
-import com.github.kittinunf.fuel.core.awaitResponseResult
-import com.github.kittinunf.fuel.core.extensions.jsonBody
-import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.fuel.httpPost
-import com.github.kittinunf.result.Result;
-import com.google.android.material.snackbar.Snackbar
+import android.os.Bundle
+import android.view.MenuItem
+import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.properties.Delegates
 
 class MainActivity : AppCompatActivity() {
 
-    var serverIP: String? = null
-    var serverPort: String? = null
-
-    private lateinit var appBarConfiguration: AppBarConfiguration
-    private lateinit var binding: ActivityMainBinding
+    private lateinit var toggle: ActionBarDrawerToggle
+    private var ip: String? = null
+    private var port: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
 
-        val intent = Intent(this, ConnexionActivity::class.java)
+        toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
 
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
-        setSupportActionBar(binding.appBarMain.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val getResult =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                if (it.resultCode == RESULT_OK) {
-                    serverIP = it.data?.getStringExtra("serverIP")
-                    serverPort = it.data?.getStringExtra("serverPort")
+        val viewModel: Communicator = ViewModelProvider(this).get(Communicator::class.java)
 
-                    Fuel.get("http://$serverIP:$serverPort/api/request_infos")//.response { result -> Toast.makeText(this@MainActivity, result.toString(), Toast.LENGTH_LONG)}
-                        .response { request, response, result ->
-                            println(request)
-                            println(response)
-                            val (bytes, error) = result
-                            if (bytes != null) {
-                                println("[response bytes] ${String(bytes)}")
-                            }
+
+        val connectFragment = ConnectFragment()
+        val soundFragment = SoundFragment()
+        val windowFragment = WindowsFragment()
+        val doorFragment = DoorFragment()
+        val lightbulbsFragment = LightbulbsFragment()
+
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragment, connectFragment)
+            commit()
+        }
+
+        navView.setNavigationItemSelectedListener {
+            ip = viewModel.ip
+            port = viewModel.port
+            when(it.itemId){
+                R.id.miDoors -> {
+                    if(ip != null && port != null) {
+
+                        supportFragmentManager.beginTransaction().apply {
+                            replace(R.id.fragment, doorFragment)
+                            commit()
                         }
+                    } else {
+                        Toast.makeText(applicationContext, "Please enter a valid IP and port", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                R.id.miSound -> {
+                    if(ip != null && port != null) {
 
-                    val json = "{\"volume\":-0.4, \"id\":\"Spotify\", \"muted\":false}"
-
-                    Fuel.post("http://$serverIP:$serverPort/api/update_volume")
-                        .jsonBody(json)
-                        .response { request, response, result ->
-                            println(request)
-                            println(response)
-                            val (bytes, error) = result
-                            if(bytes != null) {
-                                println("[response bytes] ${String(bytes)}")
-                            }
+                        supportFragmentManager.beginTransaction().apply {
+                            replace(R.id.fragment, soundFragment)
+                            commit()
                         }
+                    } else {
+                        Toast.makeText(applicationContext, "Please enter a valid IP and port", Toast.LENGTH_LONG).show()
+                    }
+                }
 
+                R.id.miWindows -> {
+                    if(ip != null && port != null) {
 
-                    /*
-                    Fuel.post("http://$serverIP:$serverPort/api/update_volume ").jsonBody(json)
-                        .response { result ->
-                            when (result) {
-                                is Result.Success -> {
-                                    Toast.makeText(
-                                        this@MainActivity,
-                                        result.toString(),
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                                is Result.Failure -> {
-                                    Toast.makeText(
-                                        this@MainActivity,
-                                        "http://$serverIP:$serverPort/api/request_infos",
-                                        Toast.LENGTH_LONG
-                                    ).show()
-                                }
-                            }
-                        }*/
+                        //Toast.makeText(applicationContext, "Clicked Windows", Toast.LENGTH_LONG).show()
+                        supportFragmentManager.beginTransaction().apply {
+                            replace(R.id.fragment, windowFragment)
+                            commit()
+                        }
+                    } else {
+                        Toast.makeText(applicationContext, "Please enter a valid IP and port", Toast.LENGTH_LONG).show()
+                    }
+                }
+                R.id.miLightbulbs -> {
+                    if(ip != null && port != null) {
+
+                        //Toast.makeText(applicationContext, "Clicked Windows", Toast.LENGTH_LONG).show()
+                        supportFragmentManager.beginTransaction().apply {
+                            replace(R.id.fragment, lightbulbsFragment)
+                            commit()
+                        }
+                    } else {
+                        Toast.makeText(applicationContext, "Please enter a valid IP and port", Toast.LENGTH_LONG).show()
+                    }
                 }
             }
+            true
+        }
 
-        getResult.launch(intent)
 
-        val drawerLayout: DrawerLayout = binding.drawerLayout
-        val navView: NavigationView = binding.navView
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
-        appBarConfiguration = AppBarConfiguration(
-            setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
-            ), drawerLayout
-        )
-        setupActionBarWithNavController(navController, appBarConfiguration)
-        navView.setupWithNavController(navController)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-    override fun onSupportNavigateUp(): Boolean {
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
-        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

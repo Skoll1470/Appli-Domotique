@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/miSound"
+        android:title="Sound"/>
+
+    <item
+        android:id="@+id/miWindows"
+        android:title="Windows"/>
+
+    <item
+        android:id="@+id/miDoors"
+        android:title="Doors"/>
+    <item
+        android:id="@+id/miLightbulbs"
+        android:title="Lights"/>
+
+</menu>
