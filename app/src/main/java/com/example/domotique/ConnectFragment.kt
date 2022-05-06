@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.connect_fragment.*
 
@@ -19,8 +18,8 @@ class ConnectFragment : Fragment(R.layout.connect_fragment) {
 
         submitAddr.setOnClickListener {
             val ip = ipAddress.text.toString()
-            val port = if (port.text.toString().toInt() in 1..25000) {
-                port.text.toString().toInt()
+            val port = if (etPort.text.toString().isNotEmpty() && etPort.text.toString().toInt() in 1..25000) {
+                etPort.text.toString().toInt()
             } else {
                 null
             }

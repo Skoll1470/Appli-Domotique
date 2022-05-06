@@ -1,11 +1,9 @@
 package com.example.domotique
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.drawable.toDrawable
-import androidx.core.graphics.toColorInt
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_lightbulb.view.*
 import vadiole.colorpicker.ColorModel
@@ -26,22 +24,17 @@ class LightbulbAdapter(
         holder.itemView.apply {
             lightbulbName.text = lightbulbs[position].id
             lightbulbIntensity.progress = (lightbulbs[position].intensity * 100).toInt()
-            colorPickerButton.foreground = lightbulbs[position].color.toDrawable()
+            colorPickerButton.background = lightbulbs[position].color.toArgb().toDrawable() //.toDrawable()
             colorPickerButton.setOnClickListener {
 
-                val currentColor = it.foreground.toString().split("@")[1].toLong(16)
-                val value = Color.valueOf(currentColor).toArgb()
-
-                println("[Current color] : $currentColor")
-
                 val colorPicker: ColorPickerDialog = ColorPickerDialog.Builder()//  set Color Model. ARGB, RGB or HSV
-                    .setInitialColor(value)
+                    //.setInitialColor(value)
                     .setColorModel(ColorModel.HSV)
                     .setColorModelSwitchEnabled(true)
                     .setButtonOkText(android.R.string.ok)
                     .setButtonCancelText(android.R.string.cancel)
                     .onColorSelected { color: Int ->
-                        colorPickerButton.foreground = color.toDrawable()
+                        colorPickerButton.background = color.toDrawable()
                     }
                     .create()
 

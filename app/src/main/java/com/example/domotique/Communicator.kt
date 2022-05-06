@@ -1,6 +1,5 @@
 package com.example.domotique
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class Communicator : ViewModel(){

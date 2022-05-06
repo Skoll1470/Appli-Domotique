@@ -45,8 +45,8 @@
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:text=""
-        android:background="@drawable/color_picker_button"
-        android:foreground="#FFFFFF"
+        android:background="#FFFFFF"
+        android:foreground="@drawable/color_picker_button"
         app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
