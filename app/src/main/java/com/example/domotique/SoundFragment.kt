@@ -16,8 +16,6 @@ import org.json.JSONObject
 
 class SoundFragment : Fragment() {
 
-    val jsonUtils = JsonHandlers()
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,9 +31,47 @@ class SoundFragment : Fragment() {
 
         val model = ViewModelProvider(requireActivity()).get(Communicator::class.java)
 
-        val httpAsync  = "http://${model.ip}:${model.port}/api/request_infos"
+        var adapter: SoundAdapter?
+
+        swipeRefreshSound.setOnRefreshListener {
+            val httpAsync = "http://${model.ip}:${model.port}/api/request_infos"
+                .httpGet()
+                .responseJson { request, response, result ->
+                    when (result) {
+                        is Result.Failure -> {
+                            val ex = result.getException()
+                            println(ex)
+                        }
+                        is Result.Success -> {
+                            val data = result.get()
+                            val donnees = data.array()
+                            val channels = mutableListOf<Sound>()
+
+                            for (i in 0 until donnees.length()) {
+                                println("[Données reçues] : ${donnees.getJSONObject(i)} ")
+                                val donnee = donnees.getJSONObject(i)
+                                val volume = donnee.getDouble("volume").toFloat() / 65536.0f
+                                channels.add(
+                                    Sound(
+                                        donnee.getString("id"),
+                                        volume,
+                                        donnee.getBoolean("muted")
+                                    )
+                                )
+                            }
+                            adapter = SoundAdapter(channels)
+                            rvSounds.adapter = adapter
+                            rvSounds.layoutManager = LinearLayoutManager(activity)
+                            swipeRefreshSound.isRefreshing = false
+                        }
+                    }
+                }
+            httpAsync.join()
+        }
+
+        val httpAsync = "http://${model.ip}:${model.port}/api/request_infos"
             .httpGet()
-            .responseJson{ request, response, result ->
+            .responseJson { request, response, result ->
                 when (result) {
                     is Result.Failure -> {
                         val ex = result.getException()
@@ -46,13 +82,19 @@ class SoundFragment : Fragment() {
                         val donnees = data.array()
                         val channels = mutableListOf<Sound>()
 
-                        for(i in 0 until donnees.length()){
+                        for (i in 0 until donnees.length()) {
                             println("[Données reçues] : ${donnees.getJSONObject(i)} ")
                             val donnee = donnees.getJSONObject(i)
                             val volume = donnee.getDouble("volume").toFloat() / 65536.0f
-                            channels.add(Sound(donnee.getString("id"), volume, donnee.getBoolean("muted")))
+                            channels.add(
+                                Sound(
+                                    donnee.getString("id"),
+                                    volume,
+                                    donnee.getBoolean("muted")
+                                )
+                            )
                         }
-                        val adapter = SoundAdapter(channels)
+                        adapter = SoundAdapter(channels)
                         rvSounds.adapter = adapter
                         rvSounds.layoutManager = LinearLayoutManager(activity)
 
