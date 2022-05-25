@@ -29,7 +29,8 @@ class JsonHandlers {
         httpAsync.join()
     }
 
-    fun getSoundApps(formatedAddress: String) {
+    fun getObjects : JSONArray(formatedAddress: String) {
+        val donnees
        val httpAsync = formatedAddress
            .httpGet()
            .responseJson { request, response, result ->
@@ -40,23 +41,38 @@ class JsonHandlers {
                    }
                    is Result.Success -> {
                        val data = result.get()
-                       val donnees = data.array()
+                       donnees = data.array()
                        for(i in 0..donnees.length()-1) {
                           println("[Appli ${i+1}] : ${donnees.getJSONObject(i)}")
                        }
-                       //println("[test] : ${donnee.get("volume")}")
-                       //println(donnee.get("id"))
-                       //println(donnee.get("muted"))
-                       //println(donnee)
                    }
                }
            }
         httpAsync.join()
+        return donnees
     }
 
     fun updateSoundAPP(formatedAddress: String, app: String, volume: Float, muted: Boolean){
         Fuel.post(formatedAddress)
             .jsonBody("{\"volume\" : $volume, \"id\" : \"$app\", \"muted\" : $muted}")
+            .response { result -> }
+    }
+
+    fun updateDoor(formatedAddress: String, door: String, toggle: Boolean){
+        Fuel.post(formatedAddress)
+            .jsonBody("{\"open\" : $toggle, \"id\" : \"$app\"}")
+            .response { result -> }
+    }
+
+    fun updateLightBulb(formatedAddress: String, light: String, intensity: Float, color : String){
+        Fuel.post(formatedAddress)
+            .jsonBody("{\"intensity\" : $intensity, \"id\" : \"$light\", \"color\" : \"$color\"}")
+            .response { result -> }
+    }
+
+    fun updateWindow(formatedAddress: String, window: String, toggle: Boolean){
+        Fuel.post(formatedAddress)
+            .jsonBody("{\"open\" : $window, \"id\" : \"$app\"}")
             .response { result -> }
     }
 }

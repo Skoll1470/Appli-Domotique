@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.door_fragment.*
 
 class DoorFragment: Fragment() {
+
+    val jason = JsonHandlers()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,6 +26,13 @@ class DoorFragment: Fragment() {
             Door("Porte 1", true),
             Door("Porte 2", false)
         )
+
+        //val data = jason.getObject("ADRESSE POUR REQUEST LES SONS")
+        //val doors = mutableListOf()
+        //for(i in 0..data.length-1){
+        //    val donnee = data.getJSONObject(i)
+        //    channels.add(Door(donnee.get(1),donnee.get(0)))
+        //}
 
         val adapter = DoorAdapter(doors)
         rvDoors.adapter = adapter

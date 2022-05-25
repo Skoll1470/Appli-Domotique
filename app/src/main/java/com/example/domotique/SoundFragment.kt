@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.fragment_sound.*
 
 class SoundFragment : Fragment() {
 
+    val jason = JsonHandlers()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,6 +24,16 @@ class SoundFragment : Fragment() {
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
+        //jason.getSoundApps("http://192.168.0.102:9500/api/request_infos")
+        jason.updateSoundAPP("http://192.168.0.102:9500/api/update_volume", "Playback", -0.4f, false)
+
+        //val data = jason.getObject("ADRESSE POUR REQUEST LES SONS")
+        //val channels = mutableListOf()
+        //for(i in 0..data.length-1){
+        //    val donnee = data.getJSONObject(i)
+        //    channels.add(Sound(donnee.get(1),donnee.get(0),donnee.get(2)))
+        //}
+
         val channels = mutableListOf(
             Sound("Spotify", 0.75f, false),
             Sound("VLC", 0.33f, true),
@@ -37,9 +48,7 @@ class SoundFragment : Fragment() {
         rvSounds.adapter = adapter
         rvSounds.layoutManager = LinearLayoutManager(activity)
 
-        val jason = JsonHandlers()
-        //jason.getSoundApps("http://192.168.0.102:9500/api/request_infos")
-        jason.updateSoundAPP("http://192.168.0.102:9500/api/update_volume", "Playback", -0.4f, false)
+
     }
 
 }

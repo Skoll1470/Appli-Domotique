@@ -9,6 +9,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.windows_fragment.*
 
 class WindowsFragment: Fragment() {
+
+    val jason = JsonHandlers()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -23,6 +26,13 @@ class WindowsFragment: Fragment() {
             Window("Fenêtre 1", true),
             Window("Fenêtre 2", false)
         )
+
+        //val data = jason.getObject("ADRESSE POUR REQUEST LES SONS")
+        //val windows = mutableListOf()
+        //for(i in 0..data.length-1){
+        //    val donnee = data.getJSONObject(i)
+        //    channels.add(Window(donnee.get(1),donnee.get(0)))
+        //}
 
         val adapter = WindowAdapter(windows)
         rvWindows.adapter = adapter

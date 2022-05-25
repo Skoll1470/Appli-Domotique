@@ -13,6 +13,9 @@ import vadiole.colorpicker.ColorModel
 import vadiole.colorpicker.ColorPickerDialog
 
 class LightbulbsFragment: Fragment() {
+
+    val jason = JsonHandlers()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -27,6 +30,13 @@ class LightbulbsFragment: Fragment() {
             Lightbulb("Ampoule Salon", .6f, Color.valueOf(0x893746)),
             Lightbulb("Ampoule chambre 1", 1f, Color.valueOf(0xffffff))
         )
+
+        //val data = jason.getObject("ADRESSE POUR REQUEST LES SONS")
+        //val lightbulbs = mutableListOf()
+        //for(i in 0..data.length-1){
+        //    val donnee = data.getJSONObject(i)
+        //    channels.add(Lightbulb(donnee.get(1),donnee.get(0),Color.valueOf(Color.parseColor(donnee.get(2)))))
+        //}
 
         val adapter = LightbulbAdapter(lightbulbs)
         rvLightbulbs.adapter = adapter
