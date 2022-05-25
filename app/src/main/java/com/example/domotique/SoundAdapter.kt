@@ -5,12 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_lightbulb.view.*
 import kotlinx.android.synthetic.main.item_sound.view.*
 
 class SoundAdapter(
-    private var channels: List<Sound>
+    private var channels: List<Sound>,
 ) : RecyclerView.Adapter<SoundAdapter.SoundViewHolder>(){
 
     inner class SoundViewHolder(soundView: View) : RecyclerView.ViewHolder(soundView)
@@ -22,26 +23,36 @@ class SoundAdapter(
 
     override fun onBindViewHolder(holder: SoundViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.itemView.apply {
+            val model = ViewModelProvider(context as MainActivity).get(Communicator::class.java)
             soundChannel.text = channels[position].name
             soundSeekBar.progress = (channels[position].volume * 100).toInt()
+            var previousVolume = soundSeekBar.progress
             soundSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekbar : SeekBar?, progress : Int, fromUser : Boolean) {
-                    val jason = JsonHandlers()
-                    jason.updateSoundAPP("adresse pour update les window", channels[position].name, progress.toFloat()/100.0f, channels[position].isNotMuted)
+                    val jsonUtils = JsonHandlers()
+                    val differential =  progress.toFloat() - previousVolume
+                    println("diff : $differential")
+                    jsonUtils.updateSoundAPP("http://${model.ip}:${model.port}/api/update_volume", channels[position].name, differential/100f, channels[position].isNotMuted)
+                    previousVolume = progress
                 }
 
                 override fun onStartTrackingTouch(p0: SeekBar?) {
-                    TODO("Not yet implemented")
+                    println("Not yet implemented")
+                    //TODO("Not yet implemented")
                 }
 
                 override fun onStopTrackingTouch(p0: SeekBar?) {
-                    TODO("Not yet implemented")
+                    println("Not yet implemented")
+                    //TODO("Not yet implemented")
                 }
             })
             muteSwitch.isChecked = channels[position].isNotMuted
+            var previousMute = muteSwitch.isChecked
             muteSwitch.setOnClickListener{
-                val jason = JsonHandlers()
-                jason.updateSoundAPP("adresse pour update les window", channels[position].name, channels[position].volume, !channels[position].isNotMuted)
+                val model = ViewModelProvider(context as MainActivity).get(Communicator::class.java)
+                val jsonUtils = JsonHandlers()
+                previousMute = !previousMute
+                jsonUtils.updateSoundAPP("http://${model.ip}:${model.port}/api/update_volume", channels[position].name, 0f, !previousMute)
             }
         }
     }

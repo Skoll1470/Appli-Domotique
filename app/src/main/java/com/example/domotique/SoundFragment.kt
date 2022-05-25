@@ -5,12 +5,18 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.fuel.json.responseJson
+import com.github.kittinunf.result.Result
 import kotlinx.android.synthetic.main.fragment_sound.*
+import org.json.JSONArray
+import org.json.JSONObject
 
 class SoundFragment : Fragment() {
 
-    val jason = JsonHandlers()
+    val jsonUtils = JsonHandlers()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -24,31 +30,36 @@ class SoundFragment : Fragment() {
 
     override fun onViewCreated(itemView: View, savedInstanceState: Bundle?) {
         super.onViewCreated(itemView, savedInstanceState)
-        //jason.getSoundApps("http://192.168.0.102:9500/api/request_infos")
-        jason.updateSoundAPP("http://192.168.0.102:9500/api/update_volume", "Playback", -0.4f, false)
 
-        //val data = jason.getObject("ADRESSE POUR REQUEST LES SONS")
-        //val channels = mutableListOf()
-        //for(i in 0..data.length-1){
-        //    val donnee = data.getJSONObject(i)
-        //    channels.add(Sound(donnee.get(1),donnee.get(0),donnee.get(2)))
-        //}
+        val model = ViewModelProvider(requireActivity()).get(Communicator::class.java)
 
-        val channels = mutableListOf(
-            Sound("Spotify", 0.75f, false),
-            Sound("VLC", 0.33f, true),
-            Sound("Discord", 0.75f, false),
-            Sound("Android Studio", 0.33f, true),
-            Sound("Counter-Strike: Global Offensive", 0.75f, false),
-            Sound("Firefox", 0.33f, true),
-            Sound("Sons systèmes", 0.75f, false),
-        )
+        val httpAsync  = "http://${model.ip}:${model.port}/api/request_infos"
+            .httpGet()
+            .responseJson{ request, response, result ->
+                when (result) {
+                    is Result.Failure -> {
+                        val ex = result.getException()
+                        println(ex)
+                    }
+                    is Result.Success -> {
+                        val data = result.get()
+                        val donnees = data.array()
+                        val channels = mutableListOf<Sound>()
 
-        val adapter = SoundAdapter(channels)
-        rvSounds.adapter = adapter
-        rvSounds.layoutManager = LinearLayoutManager(activity)
+                        for(i in 0 until donnees.length()){
+                            println("[Données reçues] : ${donnees.getJSONObject(i)} ")
+                            val donnee = donnees.getJSONObject(i)
+                            val volume = donnee.getDouble("volume").toFloat() / 65536.0f
+                            channels.add(Sound(donnee.getString("id"), volume, donnee.getBoolean("muted")))
+                        }
+                        val adapter = SoundAdapter(channels)
+                        rvSounds.adapter = adapter
+                        rvSounds.layoutManager = LinearLayoutManager(activity)
 
-
+                    }
+                }
+            }
+        httpAsync.join()
     }
 
 }

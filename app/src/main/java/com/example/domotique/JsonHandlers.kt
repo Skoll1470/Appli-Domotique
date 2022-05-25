@@ -1,12 +1,19 @@
 package com.example.domotique
 
 import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.await
+import com.github.kittinunf.fuel.core.awaitResponse
+import com.github.kittinunf.fuel.core.awaitResult
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.httpGet
+import com.github.kittinunf.fuel.json.FuelJson
 import com.github.kittinunf.result.Result
 import com.github.kittinunf.fuel.json.responseJson
+import com.github.kittinunf.result.Result.Success
 import org.json.JSONArray
 import org.json.JSONObject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class JsonHandlers {
 
@@ -19,7 +26,7 @@ class JsonHandlers {
                         val ex = result.getException()
                         println(ex)
                     }
-                    is Result.Success -> {
+                    is Success -> {
                         val data = result.get().obj()
                         println(data.get("joke"))
                         println(data)
@@ -30,49 +37,27 @@ class JsonHandlers {
         httpAsync.join()
     }
 
-    fun getObjects (formatedAddress: String): JSONArray {
-        var donnees = JSONArray()
-        val httpAsync = formatedAddress
-           .httpGet()
-           .responseJson { request, response, result ->
-               when (result) {
-                   is Result.Failure -> {
-                       val ex = result.getException()
-                       println(ex)
-                   }
-                   is Result.Success -> {
-                       val data = result.get()
-                       donnees = data.array()
-                       for(i in 0..donnees!!.length()-1) {
-                          println("[Appli ${i+1}] : ${donnees!!.getJSONObject(i)}")
-                       }
-                   }
-               }
-           }
-        httpAsync.join()
-        return donnees
-    }
 
-    fun updateSoundAPP(formatedAddress: String, app: String, volume: Float, muted: Boolean){
-        Fuel.post(formatedAddress)
+    fun updateSoundAPP(formattedAddress: String, app: String, volume: Float, muted: Boolean) {
+        Fuel.post(formattedAddress)
             .jsonBody("{\"volume\" : $volume, \"id\" : \"$app\", \"muted\" : $muted}")
             .response { result -> }
     }
 
-    fun updateDoor(formatedAddress: String, door: String, toggle: Boolean){
-        Fuel.post(formatedAddress)
+    fun updateDoor(formattedAddress: String, door: String, toggle: Boolean) {
+        Fuel.post(formattedAddress)
             .jsonBody("{\"open\" : $toggle, \"id\" : \"$door\"}")
             .response { result -> }
     }
 
-    fun updateLightBulb(formatedAddress: String, light: String, intensity: Int, color : Int){
-        Fuel.post(formatedAddress)
+    fun updateLightBulb(formattedAddress: String, light: String, intensity: Int, color: Int) {
+        Fuel.post(formattedAddress)
             .jsonBody("{\"intensity\" : $intensity, \"id\" : \"$light\", \"color\" : $color}")
             .response { result -> }
     }
 
-    fun updateWindow(formatedAddress: String, window: String, toggle: Boolean){
-        Fuel.post(formatedAddress)
+    fun updateWindow(formattedAddress: String, window: String, toggle: Boolean) {
+        Fuel.post(formattedAddress)
             .jsonBody("{\"open\" : $window, \"id\" : \"$window\"}")
             .response { result -> }
     }
