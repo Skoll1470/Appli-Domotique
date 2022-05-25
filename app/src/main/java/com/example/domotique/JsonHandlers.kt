@@ -60,7 +60,7 @@ class JsonHandlers {
 
     fun updateDoor(formatedAddress: String, door: String, toggle: Boolean){
         Fuel.post(formatedAddress)
-            .jsonBody("{\"open\" : $toggle, \"id\" : \"$app\"}")
+            .jsonBody("{\"open\" : $toggle, \"id\" : \"$door\"}")
             .response { result -> }
     }
 
