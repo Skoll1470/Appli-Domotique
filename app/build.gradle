@@ -48,4 +48,7 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'com.google.android.material:material:1.5.0'
     implementation 'io.github.vadiole:colorpicker:1.0.2'
+    implementation 'com.github.kittinunf.fuel:fuel:2.3.1'
+    implementation 'com.github.kittinunf.fuel:fuel-json:2.3.1'
+    implementation 'com.github.kittinunf.fuel:fuel-android:2.3.1'
 }
