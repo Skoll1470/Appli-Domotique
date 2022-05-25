@@ -5,6 +5,7 @@ import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.github.kittinunf.fuel.httpGet
 import com.github.kittinunf.result.Result
 import com.github.kittinunf.fuel.json.responseJson
+import org.json.JSONArray
 import org.json.JSONObject
 
 class JsonHandlers {
@@ -29,9 +30,9 @@ class JsonHandlers {
         httpAsync.join()
     }
 
-    fun getObjects : JSONArray(formatedAddress: String) {
-        val donnees
-       val httpAsync = formatedAddress
+    fun getObjects (formatedAddress: String): JSONArray {
+        var donnees = JSONArray()
+        val httpAsync = formatedAddress
            .httpGet()
            .responseJson { request, response, result ->
                when (result) {
@@ -42,8 +43,8 @@ class JsonHandlers {
                    is Result.Success -> {
                        val data = result.get()
                        donnees = data.array()
-                       for(i in 0..donnees.length()-1) {
-                          println("[Appli ${i+1}] : ${donnees.getJSONObject(i)}")
+                       for(i in 0..donnees!!.length()-1) {
+                          println("[Appli ${i+1}] : ${donnees!!.getJSONObject(i)}")
                        }
                    }
                }
@@ -64,15 +65,15 @@ class JsonHandlers {
             .response { result -> }
     }
 
-    fun updateLightBulb(formatedAddress: String, light: String, intensity: Float, color : String){
+    fun updateLightBulb(formatedAddress: String, light: String, intensity: Int, color : Int){
         Fuel.post(formatedAddress)
-            .jsonBody("{\"intensity\" : $intensity, \"id\" : \"$light\", \"color\" : \"$color\"}")
+            .jsonBody("{\"intensity\" : $intensity, \"id\" : \"$light\", \"color\" : $color}")
             .response { result -> }
     }
 
     fun updateWindow(formatedAddress: String, window: String, toggle: Boolean){
         Fuel.post(formatedAddress)
-            .jsonBody("{\"open\" : $window, \"id\" : \"$app\"}")
+            .jsonBody("{\"open\" : $window, \"id\" : \"$window\"}")
             .response { result -> }
     }
 }

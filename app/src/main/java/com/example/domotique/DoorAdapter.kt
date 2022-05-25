@@ -22,6 +22,10 @@ class DoorAdapter(
         holder.itemView.apply {
             doorName.text = doors[position].id
             doorToggle.isChecked = doors[position].toggle
+            doorToggle.setOnClickListener {
+                val jason = JsonHandlers()
+                jason.updateDoor("adresse pour update les window", doors[position].id, !doors[position].toggle)
+            }
         }
     }
 

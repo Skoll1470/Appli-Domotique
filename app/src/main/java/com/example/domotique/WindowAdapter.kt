@@ -21,6 +21,10 @@ class WindowAdapter(
         holder.itemView.apply {
             windowName.text = windows[position].id
             windowToggle.isChecked = windows[position].toggle
+            windowToggle.setOnClickListener {
+                val jason = JsonHandlers()
+                jason.updateWindow("adresse pour update les window", windows[position].id, !windows[position].toggle)
+            }
         }
     }
 

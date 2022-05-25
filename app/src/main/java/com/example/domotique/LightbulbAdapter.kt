@@ -3,6 +3,7 @@ package com.example.domotique
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.core.graphics.drawable.toDrawable
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_lightbulb.view.*
@@ -24,6 +25,20 @@ class LightbulbAdapter(
         holder.itemView.apply {
             lightbulbName.text = lightbulbs[position].id
             lightbulbIntensity.progress = (lightbulbs[position].intensity * 100).toInt()
+            lightbulbIntensity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekbar : SeekBar?, progress : Int, fromUser : Boolean) {
+                    val jason = JsonHandlers()
+                    //jason.updateSoundAPP("adresse pour update les window", lightbulbs[position].id, progress.toFloat()/100.0f, lightbulbs[position].color)
+                }
+
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onStopTrackingTouch(p0: SeekBar?) {
+                    TODO("Not yet implemented")
+                }
+            })
             colorPickerButton.background = lightbulbs[position].color.toArgb().toDrawable() //.toDrawable()
             colorPickerButton.setOnClickListener {
 

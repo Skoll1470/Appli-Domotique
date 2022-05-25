@@ -1,9 +1,12 @@
 package com.example.domotique
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SeekBar
 import androidx.recyclerview.widget.RecyclerView
+import kotlinx.android.synthetic.main.item_lightbulb.view.*
 import kotlinx.android.synthetic.main.item_sound.view.*
 
 class SoundAdapter(
@@ -17,11 +20,29 @@ class SoundAdapter(
         return SoundViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: SoundViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: SoundViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.itemView.apply {
             soundChannel.text = channels[position].name
             soundSeekBar.progress = (channels[position].volume * 100).toInt()
+            soundSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+                override fun onProgressChanged(seekbar : SeekBar?, progress : Int, fromUser : Boolean) {
+                    val jason = JsonHandlers()
+                    jason.updateSoundAPP("adresse pour update les window", channels[position].name, progress.toFloat()/100.0f, channels[position].isNotMuted)
+                }
+
+                override fun onStartTrackingTouch(p0: SeekBar?) {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onStopTrackingTouch(p0: SeekBar?) {
+                    TODO("Not yet implemented")
+                }
+            })
             muteSwitch.isChecked = channels[position].isNotMuted
+            muteSwitch.setOnClickListener{
+                val jason = JsonHandlers()
+                jason.updateSoundAPP("adresse pour update les window", channels[position].name, channels[position].volume, !channels[position].isNotMuted)
+            }
         }
     }
 

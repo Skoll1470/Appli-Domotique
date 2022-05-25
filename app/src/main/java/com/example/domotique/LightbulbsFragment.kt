@@ -35,7 +35,7 @@ class LightbulbsFragment: Fragment() {
         //val lightbulbs = mutableListOf()
         //for(i in 0..data.length-1){
         //    val donnee = data.getJSONObject(i)
-        //    channels.add(Lightbulb(donnee.get(1),donnee.get(0),Color.valueOf(Color.parseColor(donnee.get(2)))))
+        //    channels.add(Lightbulb(donnee.get(1),donnee.get(0),Color.valueOf(donnee.get(2))))
         //}
 
         val adapter = LightbulbAdapter(lightbulbs)
