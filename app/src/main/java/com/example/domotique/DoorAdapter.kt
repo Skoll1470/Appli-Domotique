@@ -3,6 +3,7 @@ package com.example.domotique
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_door.view.*
 import kotlinx.android.synthetic.main.item_window.view.*
@@ -22,9 +23,12 @@ class DoorAdapter(
         holder.itemView.apply {
             doorName.text = doors[position].id
             doorToggle.isChecked = doors[position].toggle
-            doorToggle.setOnClickListener {
-                val jason = JsonHandlers()
-                jason.updateDoor("adresse pour update les window", doors[position].id, !doors[position].toggle)
+            var previousClosed = doorToggle.isChecked
+            doorToggle.setOnClickListener{
+                val model = ViewModelProvider(context as MainActivity).get(Communicator::class.java)
+                val jsonUtils = JsonHandlers()
+                previousClosed = !previousClosed
+                jsonUtils.updateDoor("http://${model.ip}:${model.port}/api/update_door", doors[position].id, !previousClosed)
             }
         }
     }

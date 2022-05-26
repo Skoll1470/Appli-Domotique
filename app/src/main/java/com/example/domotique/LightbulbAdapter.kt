@@ -1,12 +1,15 @@
 package com.example.domotique
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.core.graphics.drawable.toDrawable
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_lightbulb.view.*
+import kotlinx.android.synthetic.main.item_sound.view.*
 import vadiole.colorpicker.ColorModel
 import vadiole.colorpicker.ColorPickerDialog
 
@@ -21,22 +24,29 @@ class LightbulbAdapter(
         return LightbulbViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: LightbulbViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: LightbulbViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.itemView.apply {
+            val model = ViewModelProvider(context as MainActivity).get(Communicator::class.java)
             lightbulbName.text = lightbulbs[position].id
             lightbulbIntensity.progress = (lightbulbs[position].intensity * 100).toInt()
+            var previousIntensity = lightbulbIntensity.progress
             lightbulbIntensity.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
                 override fun onProgressChanged(seekbar : SeekBar?, progress : Int, fromUser : Boolean) {
-                    val jason = JsonHandlers()
-                    //jason.updateSoundAPP("adresse pour update les window", lightbulbs[position].id, progress.toFloat()/100.0f, lightbulbs[position].color)
+                    val jsonUtils = JsonHandlers()
+                    val differential =  progress.toFloat() - previousIntensity
+                    println("diff : $differential")
+                    //jsonUtils.updateLightBulb("http://${model.ip}:${model.port}/api/update_lightbulb", lightbulbs[position].id, progress, lightbulbs[position].color)
+                    previousIntensity = progress
                 }
 
                 override fun onStartTrackingTouch(p0: SeekBar?) {
-                    TODO("Not yet implemented")
+                    println("Not yet implemented")
+                    //TODO("Not yet implemented")
                 }
 
                 override fun onStopTrackingTouch(p0: SeekBar?) {
-                    TODO("Not yet implemented")
+                    println("Not yet implemented")
+                    //TODO("Not yet implemented")
                 }
             })
             colorPickerButton.background = lightbulbs[position].color.toArgb().toDrawable() //.toDrawable()

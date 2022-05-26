@@ -5,8 +5,13 @@
     android:layout_height="match_parent"
     tools:context=".WindowsFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvLightbulbs"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLightbulb"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvLightbulbs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </FrameLayout>
