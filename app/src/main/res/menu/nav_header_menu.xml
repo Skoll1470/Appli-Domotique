@@ -3,17 +3,17 @@
 
     <item
         android:id="@+id/miSound"
-        android:title="Sound"/>
+        android:title="Son"/>
 
     <item
         android:id="@+id/miWindows"
-        android:title="Windows"/>
+        android:title="Fenêtres"/>
 
     <item
         android:id="@+id/miDoors"
-        android:title="Doors"/>
+        android:title="Portes"/>
     <item
         android:id="@+id/miLightbulbs"
-        android:title="Lights"/>
+        android:title="Ampoules"/>
 
 </menu>

@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_door.view.*
-import kotlinx.android.synthetic.main.item_window.view.*
 
 class DoorAdapter(
     private var doors: List<Door>

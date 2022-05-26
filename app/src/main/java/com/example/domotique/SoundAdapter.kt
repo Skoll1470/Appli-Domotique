@@ -7,8 +7,9 @@ import android.view.ViewGroup
 import android.widget.SeekBar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.item_lightbulb.view.*
 import kotlinx.android.synthetic.main.item_sound.view.*
+
+const val MAXLENGTH = 15
 
 class SoundAdapter(
     private var channels: List<Sound>,
@@ -24,7 +25,8 @@ class SoundAdapter(
     override fun onBindViewHolder(holder: SoundViewHolder, @SuppressLint("RecyclerView") position: Int) {
         holder.itemView.apply {
             val model = ViewModelProvider(context as MainActivity).get(Communicator::class.java)
-            soundChannel.text = channels[position].name
+            val title = channels[position].name
+            soundChannel.text = if (title.length >= MAXLENGTH) "${title.substring(0, MAXLENGTH)}...${title.substring(title.length - 7)}" else title
             soundSeekBar.progress = (channels[position].volume * 100).toInt()
             var previousVolume = soundSeekBar.progress
             soundSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {

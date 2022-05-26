@@ -16,6 +16,12 @@ class ConnectFragment : Fragment(R.layout.connect_fragment) {
 
         val model = ViewModelProvider(requireActivity()).get(Communicator::class.java)
 
+        if (model.ip != null || model.port != null){
+            ipAddress.setText(model.ip)
+            val port = model.port!!.toInt()
+            etPort.setText(port.toString())
+        }
+
         submitAddr.setOnClickListener {
             val ip = ipAddress.text.toString()
             val port = if (etPort.text.toString().isNotEmpty() && etPort.text.toString().toInt() in 1..25000) {
@@ -36,11 +42,11 @@ class ConnectFragment : Fragment(R.layout.connect_fragment) {
                     imm.hideSoftInputFromWindow(view.windowToken, 0)
                 }
 
-                Toast.makeText(context, "Address set to $ip:$port", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Addresse configurée : $ip:$port", Toast.LENGTH_SHORT).show()
 
             } else {
 
-                Toast.makeText(context, "Please insert valid address", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Merci d'entrer un port compris entre 0 et 25000", Toast.LENGTH_SHORT).show()
             }
         }
     }

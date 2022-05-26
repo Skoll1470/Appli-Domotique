@@ -2,6 +2,7 @@ package com.example.domotique
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() {
                             commit()
                         }
                     } else {
-                        Toast.makeText(applicationContext, "Please enter a valid IP and port", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(applicationContext, "Merci d'entrer une IP et un port valides", Toast.LENGTH_SHORT).show()
                     }
                 }
                 R.id.miSound -> {
@@ -62,7 +63,7 @@ class MainActivity : AppCompatActivity() {
                             commit()
                         }
                     } else {
-                        Toast.makeText(applicationContext, "Please enter a valid IP and port", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, "Merci d'entrer une IP et un port valides", Toast.LENGTH_LONG).show()
                     }
                 }
 
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity() {
                             commit()
                         }
                     } else {
-                        Toast.makeText(applicationContext, "Please enter a valid IP and port", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, "Merci d'entrer une IP et un port valides", Toast.LENGTH_LONG).show()
                     }
                 }
                 R.id.miLightbulbs -> {
@@ -87,7 +88,13 @@ class MainActivity : AppCompatActivity() {
                             commit()
                         }
                     } else {
-                        Toast.makeText(applicationContext, "Please enter a valid IP and port", Toast.LENGTH_LONG).show()
+                        Toast.makeText(applicationContext, "Merci d'entrer une IP et un port valides", Toast.LENGTH_LONG).show()
+                    }
+                }
+                R.id.settingsIcon -> {
+                    supportFragmentManager.beginTransaction().apply {
+                        replace(R.id.fragment, connectFragment)
+                        commit()
                     }
                 }
             }
@@ -99,10 +106,26 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
+        val connectFragment = ConnectFragment()
+
+        when(item.itemId) {
+            R.id.settingsIcon -> {
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.fragment, connectFragment)
+                    commit()
+                }
+            }
+        }
+
         if (toggle.onOptionsItemSelected(item)) {
             return true
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.app_bar_menu, menu)
+        return true
     }
 }

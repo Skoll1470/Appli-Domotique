@@ -1,9 +1,11 @@
 package com.example.domotique
 
-import android.graphics.Color
+import androidx.annotation.ColorInt
+
+//import androidx.annotation.ColorInt
 
 data class Lightbulb(
     var id: String,
-    var intensity: Float,
-    var color: Color,
+    var intensity: Int,
+    @ColorInt var color: Int,
 )

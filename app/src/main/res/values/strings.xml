@@ -7,4 +7,5 @@
     <string name="ip_addr">Adresse IP</string>
     <string name="port">Port</string>
     <string name="submit">Valider</string>
+    <string name="settings">Settings</string>
 </resources>
